@@ -102,7 +102,15 @@ func saveToFile() {
 
 	fmt.Println("Data saved to file on exit.")
 }
-
+/*XOR encryption for the data. Password works as key.
+ XOR works as an and/or encryption method in binary level. For example:
+ we have char 'a' that we want to encrypt with key 'b'
+ 'a' ascii value is 97 and in binary it's 01100001
+ 'b' ascii value is 98 and in binary it's 01100010
+ XOR will now compare the binary values bit by bit if they are equal or not.
+ if bits are equal resulting bit is 0 and if not then 1
+ so to encrypt a with b results: 00000011
+*/
 func xorEncryptDecrypt(input, key string) string {
 	output := make([]byte, len(input))
 
