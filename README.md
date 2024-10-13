@@ -1,28 +1,44 @@
-Notes Tool (CLI)
-This Notes Tool is a command-line interface (CLI) application that allows users to manage notes in a simple text file. The tool offers features such as showing, searching, adding, and deleting notes. The tool supports optional password protection using XOR encryption for securing your notes.
+# Notes Tool (CLI)
 
-Features
-Show notes: View the list of saved notes in the file.
-Search notes: Search for specific notes within the collection.
-Add a note: Add a new note to the list.
-Delete a note: Remove a note from the list.
-Encryption: Optional password-based encryption for securing notes.
-Intuitive navigation: Use arrow keys or number keys to navigate the menu.
-Requirements
-Go Programming Language: You need to have Go installed on your machine to run this program.
-Installation
-Clone the repository:
+The **Notes Tool** is a command-line interface (CLI) application that allows users to manage notes in a simple text file. It offers features like showing, searching, adding, and deleting notes, with optional password protection using XOR encryption for securing your notes.
 
-bash
-git clone <repository-url>
-Navigate to the project directory:
+---
 
-bash
-cd <repository-folder>
-Build the Go program:
+## Features
 
-bash
-go build main.go
+- **Show Notes**: View the list of saved notes.
+- **Search Notes**: Search for specific notes within the collection (future implementation).
+- **Add a Note**: Add a new note to the list.
+- **Delete a Note**: Remove a note from the list.
+- **Encryption**: Optional password-based encryption for securing notes.
+- **Intuitive Navigation**: Use arrow keys or number keys to navigate the menu.
+
+---
+## Requirements
+
+- **Go Programming Language**: You need to have [Go](https://golang.org/doc/install) installed on your machine to run this program.
+
+---
+
+## Installation
+
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/yourusername/notes-tool.git
+    ```
+
+2. **Navigate to the project directory**:
+    ```bash
+    cd notes-tool
+    ```
+
+3. **Build the Go program**:
+    ```bash
+    go build main.go
+    ```
+
+---
+
 Usage
 After building the program, you can run it using the following command in your terminal:
 
