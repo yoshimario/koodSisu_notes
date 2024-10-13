@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
@@ -86,7 +85,7 @@ func createFile(filename string) {
 
 func readFile(filename, password string) {
 	//Reading the content from file.
-	encodedContent, err := ioutil.ReadFile(filename)
+	encodedContent, err := os.ReadFile(filename)
 	if err != nil {
 		fmt.Printf("%sError reading file: %s%s\n", Red, err, Reset) 
 		return
@@ -94,15 +93,18 @@ func readFile(filename, password string) {
 
 	var content string
 	if password != "" {
+		//decrypting content
+		decryptedContent := xorEncryptDecrypt(string(encodedContent), password)
 		//decoding content. 
-		decodedContent, err := base64.StdEncoding.DecodeString(string(encodedContent))
+		decodedContent, err := base64.StdEncoding.DecodeString(decryptedContent)
 		if err != nil {
 			fmt.Printf("%sError decoding content: %s%s\n", Red, err, Reset)
 			return
 		}
 
 		//decrypt the content
-		content = xorEncryptDecrypt(string(decodedContent), password)
+		//content = xorEncryptDecrypt(string(decodedContent), password)
+		content = string(decodedContent)
 	} else {
 		//reading as plain text.
 		content = string(encodedContent)
@@ -118,8 +120,9 @@ func saveToFile() {
 	if len(output) > 0 {
 		//encrypting content if there is password.
 		if password != "" {
-			encryptedContent := xorEncryptDecrypt(output, password)
-			output = base64.StdEncoding.EncodeToString([]byte(encryptedContent))
+			EncodedContent := base64.StdEncoding.EncodeToString([]byte(output))
+			encryptedContent := xorEncryptDecrypt(EncodedContent, password)
+			output = encryptedContent
 		}
 	}
 
@@ -220,6 +223,9 @@ func executeCommand(command string) {
 			//do something
 			clearTerminal()
 			fmt.Printf("\n%sselected: %s%s\n", Yellow, command, Reset)
+			for i := 0; i < len(contentSlice); i++ {
+				fmt.Println(contentSlice[i])
+			}
 			fmt.Printf("\n%sPress any key to continue...%s\n", Yellow, Reset)
 			_, _, _ =keyboard.GetKey()
 		case Search:
