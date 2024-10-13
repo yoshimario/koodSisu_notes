@@ -9,6 +9,7 @@ import (
 	"github.com/eiannone/keyboard"
 	"runtime"
 	"time"
+	"strconv"
 )
 
 //Defining menu options as constants to prevent accidental modifications.
@@ -147,7 +148,7 @@ func readFile(filename, password string) {
 		}
 
 		//creating time object
-		timeParsed, err := time.Parse("02/01/2006 15:05", timeStr)
+		timeParsed, err := time.Parse("02/01/2006 15:04", timeStr)
 		if err != nil {
 			fmt.Printf("%sError parsing time: %s%s\n", Red, err, Reset)
 			continue //skipping this note.
@@ -305,6 +306,53 @@ func executeCommand(command string) {
 			//do something
 			clearTerminal()
 			fmt.Printf("\n%sselected: %s%s\n", Yellow, command, Reset)
+			promptMessage := fmt.Sprintf("%sSearch notes with index or tags (comma separated): %s", Yellow, Reset)
+			fmt.Print(promptMessage)
+
+			var input string
+			var tags []string
+			for {
+				char, key, err := keyboard.GetKey()
+				if err != nil {
+					fmt.Printf("%sError reading key: %s%s\n", Red, err, Reset)
+					
+					continue
+				}
+
+				if key == keyboard.KeyEnter {
+					if input == "" {
+						fmt.Printf("%sNo input provided. Please enter an index or tags.%s\n", Red, Reset)
+						fmt.Print(promptMessage)
+						continue
+					}
+
+					//checking if input is index
+					if index, err := strconv.Atoi(input); err == nil && index > 0 {
+						fmt.Println()
+						ReadNotes(index, nil) //search by index
+					} else {
+						//split input into tags and trim whitespace
+						tags = strings.Split(input, ",")
+						for i := range tags {
+							tags[i] = strings.TrimSpace(tags[i])
+						}
+						fmt.Println()
+						ReadNotes(0, tags) //search by tags
+					}
+					break
+				} else if key == keyboard.KeyBackspace2 {
+					if len(input) > 0 {
+						input = input[:len(input)-1] //remove last character
+						fmt.Print("\r" + strings.Repeat(" ", 50) + "\r") //clear the line
+						// Reprint prompt and current input
+						fmt.Print(fmt.Sprintf("%s%s%s", promptMessage, Reset, input))
+					}
+				} else {
+					input += string(char)
+					fmt.Print(string(char))
+				}
+			}
+
 			fmt.Printf("\n%sPress any key to continue...%s\n", Yellow, Reset)
 			_, _, _ =keyboard.GetKey()
 		case Add:
@@ -385,9 +433,49 @@ func executeCommand(command string) {
 			//do something
 			clearTerminal()
 			fmt.Printf("\n%sselected: %s%s\n", Yellow, command, Reset)
+			fmt.Printf("\n%sEnter the number of note to remove or 0 to cancel: %s", Yellow, Reset)
+			var indexInput string
+			for {
+				char, key, err := keyboard.GetKey()
+				if err != nil {
+					fmt.Printf("%sError reading key: %s%s\n", Red, err, Reset)
+					continue
+				}
+
+				if key == keyboard.KeyEnter {
+					if indexInput == "0" {
+						fmt.Printf("\n%sOperation cancelled.%s", Yellow, Reset)
+						break //exiting if cancelled
+					}
+
+					//trying to convert input to an index
+					index, err := strconv.Atoi(indexInput)
+					if err != nil || index <= 0 {
+						fmt.Printf("%sInvalid input. Please enter a valid index.%s\n", Red, Reset)
+						indexInput = "" //reset input
+						continue
+					}
+
+					//deleting the note
+					err = DeleteNote(index)
+					if err != nil {
+						fmt.Printf("%s%s%s", Red, err.Error(), Reset)
+					}
+					break
+				} else if key == keyboard.KeyBackspace2 {
+					if len(indexInput) > 0 {
+						indexInput = indexInput[:len(indexInput)-1] //remove last character
+						fmt.Print("\r" + strings.Repeat(" ", 50) + "\r") //clear the line
+						fmt.Print(fmt.Sprintf("%sEnter the index of the note to delete (0 to cancel): %s%s", Yellow, Reset, indexInput)) // Reprint prompt and current input
+            
+					} 
+				} else  if char >= '0' && char <= '9' {//only appending numbers.
+					indexInput += string(char) //appending char to indexInput
+					fmt.Print(string(char)) //echoing character
+				}
+			}
 			fmt.Printf("\n%sPress any key to continue...%s\n", Yellow, Reset)
 			_, _, _ =keyboard.GetKey()
-		
 	}
 	
 }
@@ -423,10 +511,18 @@ func displayMenu(options[]string, currentSelection int) {
 }
 //adding a new note to the contentSlice
 func AddNote(text string, tags ...string) {
+	loc, err := time.LoadLocation("Europe/Helsinki") //adding local timezone
+	if err != nil {
+		fmt.Printf("%sError loading location: %s%s\n", Red, err, Reset)
+		return
+	}
+
+	//get current time to variable.
+	currentTime := time.Now().In(loc)
 	note := Note{
 		Text: text,
 		Tags: tags,
-		Time: time.Now(),
+		Time: currentTime,
 	}
 	contentSlice = append(contentSlice, note)
 }
@@ -498,7 +594,7 @@ func DeleteNote(index int) error {
 	index--
 	// error handling for invalid index
 	if index < 0 || index >= len(contentSlice) {
-		return fmt.Errorf("%sIndex out of range%s", Red, Reset)
+		return fmt.Errorf("%s\nIndex out of range%s", Red, Reset)
 	}
 	// Removing note by slicing the contentSlice.
 	contentSlice = append(contentSlice[:index], contentSlice[index+1:]...)
