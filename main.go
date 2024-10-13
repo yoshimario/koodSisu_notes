@@ -83,7 +83,7 @@ func createFile(filename string) {
 	//Create empty file.
 	err := os.WriteFile(filename, []byte{}, 0644)
 	if err != nil {
-		fmt.Printf("%sError creating file: %s\n", Red, err, Reset)
+		fmt.Printf("%sError creating file: %s%s\n", Red, err, Reset)
 		return
 	}
 
@@ -425,7 +425,12 @@ func executeCommand(command string) {
         		tags[i] = strings.TrimSpace(tags[i]) // Trimming whitespace from each tag.
     		}
     		// Add note with tags
-    		AddNote(noteText, tags...)
+    		
+			if len(noteText) > 0 {
+				AddNote(noteText, tags...)
+			} else {
+				fmt.Printf("%sNote cannot be empty.%s", Red, Reset)
+			}
 			fmt.Printf("\n%sPress any key to continue...%s\n", Yellow, Reset)
 			_, _, _ =keyboard.GetKey()
 
