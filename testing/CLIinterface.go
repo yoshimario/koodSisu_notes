@@ -88,7 +88,7 @@ func CLIinterface() {
 			} else {
 				fmt.Println("\n%sInvalid key.%s", Red, Reset)
 				fmt.Println("\n%sNavigation: 1-5 or up and down arrowkeys.\nSelect command: Enter key.\nQuit progam: Escape key.%s", Yellow, Reset)
-				fmt.Println("%sPress any key to continue...%s", Yellow, Reset)
+				fmt.Println("\n%sPress any key to continue...%s", Yellow, Reset)
 				keyboard.GetKey()
 			}
 		}
@@ -102,25 +102,25 @@ func executeCommand(command string) {
 			//do something
 			clearTerminal()
 			fmt.Printf("\n%sselected: %s%s\n", Yellow, command, Reset)
-			fmt.Println("Press any key to continue...")
+			fmt.Println("\nPress any key to continue...")
 			_, _, _ =keyboard.GetKey()
 		case Search:
 			//do something
 			clearTerminal()
 			fmt.Printf("\n%sselected: %s%s\n", Yellow, command, Reset)
-			fmt.Println("Press any key to continue...")
+			fmt.Println("\nPress any key to continue...")
 			_, _, _ =keyboard.GetKey()
 		case Add:
 			//do something
 			clearTerminal()
 			fmt.Printf("\n%sselected: %s%s\n", Yellow, command, Reset)
-			fmt.Println("Press any key to continue...")
+			fmt.Println("\nPress any key to continue...")
 			_, _, _ =keyboard.GetKey()
 		case Delete:
 			//do something
 			clearTerminal()
 			fmt.Printf("\n%sselected: %s%s\n", Yellow, command, Reset)
-			fmt.Println("%sPress any key to continue...%s", Yellow, Reset)
+			fmt.Println("%s\nPress any key to continue...%s", Yellow, Reset)
 			_, _, _ =keyboard.GetKey()
 		
 	}
