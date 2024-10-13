@@ -142,12 +142,10 @@ Enter note number to delete: 2
 ```
 
 The second note will be removed from the list.
----
 
 ## Encryption
 
 The program uses XOR encryption if a password is provided. This simple encryption method protects the content of your notes by encoding and decoding them using the provided password. The encrypted data is stored as Base64-encoded strings in the file.
-
     Important: Use the same password each time to open an encrypted file.
 
 If you forget your password, you won’t be able to decrypt your notes.
