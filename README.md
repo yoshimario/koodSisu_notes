@@ -14,6 +14,7 @@ The **Notes Tool** is a command-line interface (CLI) application that allows use
 - **Intuitive Navigation**: Use arrow keys or number keys to navigate the menu.
 
 ---
+
 ## Requirements
 
 - **Go Programming Language**: You need to have [Go](https://golang.org/doc/install) installed on your machine to run this program.
@@ -23,41 +24,56 @@ The **Notes Tool** is a command-line interface (CLI) application that allows use
 ## Installation
 
 1. **Clone the repository**:
-    ```bash
-    git clone https://github.com/yourusername/notes-tool.git
-    ```
+
+   ```bash
+   git clone https://github.com/yourusername/notes-tool.git
+   ```
 
 2. **Navigate to the project directory**:
-    ```bash
-    cd notes-tool
-    ```
+
+   ```bash
+   cd notes-tool
+   ```
 
 3. **Build the Go program**:
-    ```bash
-    go build main.go
-    ```
+   ```bash
+   go build main.go
+   ```
 
 ---
 
-Usage
+## Usage
+
 After building the program, you can run it using the following command in your terminal:
 
-bash
+```bash
 ./main <filename> [password]
-Parameters:
-<filename>: The name of the text file where notes are saved. If the file doesn't exist, it will be created.
-[password] (optional): An optional password for encrypting/decrypting the file content using XOR encryption.
-Example Commands:
-Run the program without encryption:
+```
 
-bash
+---
+
+## Parameters:
+
+    •	<filename>: The name of the text file where notes are saved. If the file doesn’t exist, it will be created.
+    •	[password] (optional): An optional password for encrypting/decrypting the file content using XOR encryption.
+---
+
+## Example Commands:
+
+    •	Run the program without encryption:
+
+```bash
 ./main notes.txt
-This will create a file called notes.txt (if it doesn't exist) and allow you to manage notes in plain text.
-Run the program with encryption:
+```
 
-bash
+This will create a file called notes.txt (if it doesn't exist) and allow you to manage notes in plain text.
+
+	•	Run the program with encryption:
+```bash
 ./main secrets.txt mypassword
+```
 This will create a file called secrets.txt (if it doesn't exist) and encrypt/decrypt the notes with the password mypassword.
+---
 Navigating the Menu
 Use the Up and Down arrow keys to navigate between menu options.
 Press the Enter key to select the highlighted option.
@@ -80,11 +96,11 @@ Exit:
 
 Exits the program and automatically saves changes to the file.
 Example:
-1. Adding a New Note
-When you run the tool and choose Add a Note from the menu:
 
-bash
-3. Add a note.
+1. Adding a New Note
+   When you run the tool and choose Add a Note from the menu:
+
+bash 3. Add a note.
 You will be prompted to input the text for the note. For example:
 
 arduino
@@ -92,17 +108,17 @@ Enter note text: "Buy groceries"
 The note will be added to the collection and saved to the file.
 
 2. Viewing Notes
-When selecting Show Notes:
+   When selecting Show Notes:
 
 bash
+
 1. Show notes
-You will see a list of notes in the file:
+   You will see a list of notes in the file:
 
 csharp
 001 - Buy groceries
 002 - Complete homework
-003 - Meeting with Bob
-3. Deleting a Note
+003 - Meeting with Bob 3. Deleting a Note
 When selecting Delete a Note, you will be prompted to choose a note by number:
 
 arduino
