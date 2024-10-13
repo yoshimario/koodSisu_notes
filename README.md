@@ -56,63 +56,74 @@ After building the program, you can run it using the following command in your t
 
     •	<filename>: The name of the text file where notes are saved. If the file doesn’t exist, it will be created.
     •	[password] (optional): An optional password for encrypting/decrypting the file content using XOR encryption.
+
 ---
 
 ## Example Commands:
 
-    •	Run the program without encryption:
+• Run the program without encryption:
 
 ```bash
 ./main notes.txt
 ```
 
 This will create a file called notes.txt (if it doesn't exist) and allow you to manage notes in plain text.
+• Run the program with encryption:
 
-	•	Run the program with encryption:
 ```bash
 ./main secrets.txt mypassword
 ```
-This will create a file called secrets.txt (if it doesn't exist) and encrypt/decrypt the notes with the password mypassword.
+
+## This will create a file called secrets.txt (if it doesn't exist) and encrypt/decrypt the notes with the password mypassword.
+
+## Navigating the Menu
+
+    •	Use the Up and Down arrow keys to navigate between menu options.
+    •	Press the Enter key to select the highlighted option.
+    •	You can also press number keys (1-5) to select the respective option.
+    •	Press Esc to exit the program at any time.
+
 ---
-Navigating the Menu
-Use the Up and Down arrow keys to navigate between menu options.
-Press the Enter key to select the highlighted option.
-You can also press number keys (1-5) to select the respective option.
-Press Esc to exit the program at any time.
-Menu Options:
-Show Notes:
 
-Displays the current list of notes stored in the file.
-Search Notes (not yet implemented):
+## Menu Options:
 
-Will search for specific notes based on a keyword (future implementation).
-Add a Note:
+1. Show Notes:
+   Displays the current list of notes stored in the file.
+2. Search Notes (not yet implemented):
+   Will search for specific notes based on a keyword (future implementation).
+3. Add a Note:
+   Prompts you to enter a new note and adds it to the file.
+4. Delete a Note:
+   Prompts you to select and remove a note from the file.
+5. Exit:
+   Exits the program and automatically saves changes to the file.
 
-Prompts you to enter a new note and adds it to the file.
-Delete a Note:
+---
 
-Prompts you to select and remove a note from the file.
-Exit:
-
-Exits the program and automatically saves changes to the file.
-Example:
+## Example:
 
 1. Adding a New Note
-   When you run the tool and choose Add a Note from the menu:
 
-bash 3. Add a note.
+When you run the tool and choose Add a Note from the menu:
+
+```bash
+3. Add a note.
+```
+
 You will be prompted to input the text for the note. For example:
 
-arduino
+```bash
 Enter note text: "Buy groceries"
+```
+
 The note will be added to the collection and saved to the file.
 
 2. Viewing Notes
    When selecting Show Notes:
 
-bash
-
+```bash
 1. Show notes
+```
    You will see a list of notes in the file:
 
 csharp
