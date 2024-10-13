@@ -68,6 +68,7 @@ After building the program, you can run it using the following command in your t
 ```
 
 This will create a file called notes.txt (if it doesn't exist) and allow you to manage notes in plain text.
+
 • Run the program with encryption:
 
 ```bash
@@ -124,27 +125,41 @@ The note will be added to the collection and saved to the file.
 ```bash
 1. Show notes
 ```
-   You will see a list of notes in the file:
 
-csharp
+You will see a list of notes in the file:
+
+```bash
 001 - Buy groceries
 002 - Complete homework
-003 - Meeting with Bob 3. Deleting a Note
-When selecting Delete a Note, you will be prompted to choose a note by number:
+003 - Meeting with Bob
+```
 
-arduino
+3. Deleting a Note
+   When selecting Delete a Note, you will be prompted to choose a note by number:
+
+```bash
 Enter note number to delete: 2
-The second note will be removed from the list.
+```
 
-Encryption
+The second note will be removed from the list.
+---
+
+## Encryption
+
 The program uses XOR encryption if a password is provided. This simple encryption method protects the content of your notes by encoding and decoding them using the provided password. The encrypted data is stored as Base64-encoded strings in the file.
 
-Important:
-Use the same password each time to open an encrypted file.
-If you forget your password, you won't be able to decrypt your notes.
-Known Issues / Features to Implement
-Search function is not yet implemented.
-Improvement: Add more advanced encryption options or stronger algorithms.
-UX Improvements: Colors and more user-friendly interface.
-License
+    Important: Use the same password each time to open an encrypted file.
+
+If you forget your password, you won’t be able to decrypt your notes.
+
+## Known Issues / Features to Implement
+
+    •	Search Function: Not yet implemented.
+    •	Improvement: Add more advanced encryption options or stronger algorithms.
+    •	UX Improvements: Add colors and a more user-friendly interface.
+
+---
+
+## License
+
 This project is open-source and available under the MIT License.
