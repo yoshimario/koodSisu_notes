@@ -6,8 +6,16 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 )
-
+const (
+	Reset 	= "\033[0m"
+	Red 	= "\033[31m"
+	Green 	= "\033[32m"
+	GreenBg = "\033[42m"
+	Yellow 	= "\033[33m"
+	Black 	= "\033[30m"
+)
 var contentSlice []string
 var filename string
 var password string
@@ -15,7 +23,7 @@ var password string
 func TempMain() {
 	//checking if user provided filename.
 	if len(os.Args) < 2 {
-		fmt.Println("No file name provided. Usage: go run main.go <filename> [password]")
+		fmt.Printf("%sNo file name provided. %sUsage: %sgo run main.go <filename> [password]%s\n", Red, Yellow, Green, Reset)
 		return
 	}
 	
@@ -36,29 +44,32 @@ func TempMain() {
 		//doesen't exist. creating it as empty file.
 		createFile(filename)
 	} else {
-		fmt.Println("Error checking file: ", err)
+		fmt.Printf("%sError checking file: %s%s\n", Red, err, Reset)
 	}
-
+	//greeting the user and pausing the program so the user can read the welcome.
+	fmt.Printf("%sWelcome to the notes tool!%s\n", Yellow, Reset)
+	time.Sleep(2 * time.Second)
 	//saving content map to file on exit
 	defer saveToFile()
+	CLIinterface()
 }
 
 func createFile(filename string) {
 	//Create empty file.
 	err := os.WriteFile(filename, []byte{}, 0644)
 	if err != nil {
-		fmt.Println("Error creating file: ", err)
+		fmt.Printf("%sError creating file: %s\n", Red, err, Reset)
 		return
 	}
 
-	fmt.Println("File created successfully.")
+	fmt.Printf("%sFile created successfully.%s\n", Yellow, Reset)
 }
 
 func readFile(filename, password string) {
 	//Reading the content from file.
 	encodedContent, err := ioutil.ReadFile(filename)
 	if err != nil {
-		fmt.Println("Error reading file: ", err) 
+		fmt.Printf("%sError reading file: %s%s\n", Red, err, Reset) 
 		return
 	}
 
@@ -67,7 +78,7 @@ func readFile(filename, password string) {
 		//decoding content. 
 		decodedContent, err := base64.StdEncoding.DecodeString(string(encodedContent))
 		if err != nil {
-			fmt.Println("Error decoding content: ", err)
+			fmt.Printf("%sError decoding content: %s%s\n", Red, err, Reset)
 			return
 		}
 
@@ -78,7 +89,7 @@ func readFile(filename, password string) {
 		content = string(encodedContent)
 	}
 
-	//storing contents to global map.
+	//storing contents to global slice.
 	contentSlice = strings.Split(content, "\n")	
 	
 }
@@ -96,11 +107,11 @@ func saveToFile() {
 	//writing the content in file.
 	err := os.WriteFile(filename, []byte(output), 0644)
 	if err != nil {
-		fmt.Println("Error saving file: ", err)
+		fmt.Printf("%sError saving file: %s\n", Red, err, Reset)
 		return
 	}
 
-	fmt.Println("Data saved to file on exit.")
+	fmt.Printf("%s\nData saved successfully.%s\n", Yellow, Reset)
 }
 /*XOR encryption for the data. Password works as key.
  XOR works as an and/or encryption method in binary level. For example:

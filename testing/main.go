@@ -9,6 +9,7 @@ import (
 	"strings"
 	"github.com/eiannone/keyboard"
 	"runtime"
+	"time"
 )
 
 //Defining menu options as constants to prevent accidental modifications.
@@ -18,11 +19,14 @@ const (
 	Add 	= "3. Add a note."
 	Delete 	= "4. Delete a note"
 	Exit 	= "5. Exit."
+	//some colours for interface.
+	Reset 	= "\033[0m"
+	Red 	= "\033[31m"
+	Green 	= "\033[32m"
+	GreenBg = "\033[42m"
+	Yellow 	= "\033[33m"
+	Black 	= "\033[30m"
 )
-var contentSlice []string
-var filename string
-var password string
-
 var options = []string {
 	Show,
 	Search,
@@ -30,13 +34,15 @@ var options = []string {
 	Delete,
 	Exit,
 }
-
+var contentSlice []string
+var filename string
+var password string
 
 
 func main() {
 	//checking if user provided filename.
 	if len(os.Args) < 2 {
-		fmt.Println("No file name provided. Usage: go run main.go <filename> [password]")
+		fmt.Printf("%sNo file name provided. %sUsage: %sgo run main.go <filename> [password]%s\n", Red, Yellow, Green, Reset)
 		return
 	}
 	
@@ -57,29 +63,32 @@ func main() {
 		//doesen't exist. creating it as empty file.
 		createFile(filename)
 	} else {
-		fmt.Println("Error checking file: ", err)
+		fmt.Printf("%sError checking file: %s%s\n", Red, err, Reset)
 	}
-	CLIinterface()
+	//greeting the user and pausing the program so the user can read the welcome.
+	fmt.Printf("%sWelcome to the notes tool!%s\n", Yellow, Reset)
+	time.Sleep(2 * time.Second)
 	//saving content map to file on exit
 	defer saveToFile()
+	CLIinterface()
 }
 
 func createFile(filename string) {
 	//Create empty file.
 	err := os.WriteFile(filename, []byte{}, 0644)
 	if err != nil {
-		fmt.Println("Error creating file: ", err)
+		fmt.Printf("%sError creating file: %s\n", Red, err, Reset)
 		return
 	}
 
-	fmt.Println("File created successfully.")
+	fmt.Printf("%sFile created successfully.%s\n", Yellow, Reset)
 }
 
 func readFile(filename, password string) {
 	//Reading the content from file.
 	encodedContent, err := ioutil.ReadFile(filename)
 	if err != nil {
-		fmt.Println("Error reading file: ", err) 
+		fmt.Printf("%sError reading file: %s%s\n", Red, err, Reset) 
 		return
 	}
 
@@ -88,7 +97,7 @@ func readFile(filename, password string) {
 		//decoding content. 
 		decodedContent, err := base64.StdEncoding.DecodeString(string(encodedContent))
 		if err != nil {
-			fmt.Println("Error decoding content: ", err)
+			fmt.Printf("%sError decoding content: %s%s\n", Red, err, Reset)
 			return
 		}
 
@@ -99,7 +108,7 @@ func readFile(filename, password string) {
 		content = string(encodedContent)
 	}
 
-	//storing contents to global map.
+	//storing contents to global slice.
 	contentSlice = strings.Split(content, "\n")	
 	
 }
@@ -117,11 +126,11 @@ func saveToFile() {
 	//writing the content in file.
 	err := os.WriteFile(filename, []byte(output), 0644)
 	if err != nil {
-		fmt.Println("Error saving file: ", err)
+		fmt.Printf("%sError saving file: %s\n", Red, err, Reset)
 		return
 	}
 
-	fmt.Println("Data saved to file on exit.")
+	fmt.Printf("%s\nData saved successfully.%s\n", Yellow, Reset)
 }
 /*XOR encryption for the data. Password works as key.
  XOR works as an and/or encryption method in binary level. For example:
@@ -141,13 +150,14 @@ func xorEncryptDecrypt(input, key string) string {
 
 	return string(output)
 }
+
 //this function drives the program. Here we handle user inputs and navigate the menu.
 func CLIinterface() {
 	currentSelection := 0
 	// opening keyboard import for inputs.
 	if err := keyboard.Open(); err != nil {
 		//some error handling incase keyboard fails to open.
-		fmt.Println("Error opening keyboard:", err) 
+		fmt.Printf("%sError opening keyboard: %s%s\n", Red, err, Reset) 
 	}
 	/*making sure keyboard input closes when we are done running CLIinterface.
 	this wont be executed until we are leaving CLIinterface()*/
@@ -161,7 +171,7 @@ func CLIinterface() {
 		char, key, err := keyboard.GetKey()
 		//some more error handling for keyboard inputs.
 		if err != nil {
-			fmt.Println("Error reading key: ", err)
+			fmt.Printf("%sError reading key: %s%s\n", Red, err, Reset)
 		}
 
 		//handling inputs in switch statement
@@ -180,21 +190,22 @@ func CLIinterface() {
 			input := options[currentSelection] //getting the user input
 			//checking if exit selected.
 			if input == Exit {
-				fmt.Println("\nExiting program.")
+				clearTerminal()
+				fmt.Printf("\n%sExiting program.%s\n", Yellow, Reset)
 				return
 			}
 			executeCommand(input)
 		case keyboard.KeyEsc: //exit
-			fmt.Println("\nExiting program.")
+			fmt.Printf("\n%sExiting program.%s\n", Yellow, Reset)
 			return
 		default: 
 			//handling also numeric keys.
 			if char >= '1' && char <= '5' {
 				currentSelection = int(char - '1') //converting char to int
 			} else {
-				fmt.Println("\nInvalid key.")
-				fmt.Println("\nNavigation: 1-5 or up and down arrowkeys.\nSelect command: Enter key.\nQuit progam: Escape key.")
-				fmt.Println("Press any key to continue...")
+				fmt.Printf("\n%sInvalid key.%s\n", Red, Reset)
+				fmt.Printf("\n%sNavigation: 1-5 or up and down arrowkeys.\nSelect command: Enter key.\nQuit progam: Escape key.%s\n", Yellow, Reset)
+				fmt.Printf("%sPress any key to continue...%s\n", Yellow, Reset)
 				keyboard.GetKey()
 			}
 		}
@@ -206,28 +217,29 @@ func executeCommand(command string) {
 	switch command {
 		case Show:
 			//do something
-			fmt.Printf("\nselected: %s\n", command)
-			fmt.Println("Press any key to continue...")
+			clearTerminal()
+			fmt.Printf("\n%sselected: %s%s\n", Yellow, command, Reset)
+			fmt.Printf("%sPress any key to continue...%s\n", Yellow, Reset)
 			_, _, _ =keyboard.GetKey()
 		case Search:
 			//do something
-			fmt.Printf("\nselected: %s\n", command)
-			fmt.Println("Press any key to continue...")
+			clearTerminal()
+			fmt.Printf("\n%sselected: %s%s\n", Yellow, command, Reset)
+			fmt.Printf("%sPress any key to continue...%s\n", Yellow, Reset)
 			_, _, _ =keyboard.GetKey()
 		case Add:
 			//do something
-			fmt.Printf("\nselected: %s\n", command)
-			fmt.Println("Press any key to continue...")
+			clearTerminal()
+			fmt.Printf("\n%sselected: %s%s\n", Yellow, command, Reset)
+			fmt.Printf("%sPress any key to continue...%s\n", Yellow, Reset)
 			_, _, _ =keyboard.GetKey()
 		case Delete:
 			//do something
-			fmt.Printf("\nselected: %s\n", command)
-			fmt.Println("Press any key to continue...")
+			clearTerminal()
+			fmt.Printf("\n%sselected: %s%s\n", Yellow, command, Reset)
+			fmt.Printf("%sPress any key to continue...%s\n", Yellow, Reset)
 			_, _, _ =keyboard.GetKey()
-		case Exit: {
-			fmt.Println("Saving file, exiting program...")
-			return
-		}
+		
 	}
 	
 }
@@ -249,16 +261,17 @@ func clearTerminal() {
 
 //function to display menu in the interface.
 func displayMenu(options[]string, currentSelection int) {
-	fmt.Println("\nSelect operation:")
+	fmt.Printf("\n%sSelect operation:%s\n", Yellow, Reset)
 
 	for i, option := range options {
 		if i == currentSelection {
-			fmt.Printf("\033[1;30;47m %s\033[0m\n", option)
+			fmt.Printf("%s%s %s%s\n", GreenBg, Green, option, Reset)
 		} else {
-			fmt.Printf(" %s\n", option)
+			fmt.Printf("%s %s%s\n", Green, option, Reset)
 		}
 	}
 
-	fmt.Println("Navigation: 1-5 or up and down arrowkeys.\nSelect command: Enter key.\nQuit progam: Escape key.")
+	fmt.Printf("%s\nNavigation: 1-5 or up and down arrowkeys.\nSelect command: Enter key.\nQuit progam: Escape key.%s\n", Yellow, Reset)
 }
+
 
